@@ -15,10 +15,10 @@ valueWithComment = true
 valueWithMultilineComment = false
 
 # Range: [5, 10]
-intValueWithRangeComment = 7
+intValueWithRangeComment = 6
 
 # Range: [5.0, 10.54321]
-floatValueWithRangeComment = 7.5
+floatValueWithRangeComment = 5.7654
 
 enumValue = "SATURDAY"
 

@@ -4,3 +4,12 @@ intValueOutOfRange = 50
 # Range: [1.0, 10.0]
 floatValueOutOfRange = 0.54321
 
+floatValueCoercedFromInt = 5
+
+# Must be a weekday
+# Allowed values: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY
+enumValueWithRestriction = "SUNDAY"
+
+# Allowed values: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+enumValueInvalid = "monday"
+

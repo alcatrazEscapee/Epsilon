@@ -66,9 +66,17 @@ public class IntegrationTests
         assertThat(stringValue.get()).isEqualTo("boobly booble");
         assertThat(floatValue.getAsFloat()).isEqualTo(3.14f);
         assertThat(valueWithComment.getAsBoolean()).isTrue();
+        assertThat(valueWithMultilineComment.getAsBoolean()).isFalse();
+        assertThat(intValueWithRangeComment.getAsInt()).isEqualTo(6);
+        assertThat(floatValueWithRangeComment.getAsFloat()).isEqualTo(5.7654f);
 
         assertThat(enumValue.get()).isEqualTo(Day.SATURDAY);
         assertThat(enumValueWithRestriction.get()).isEqualTo(Day.WEDNESDAY);
+
+        assertThat(valueInCategory.getAsInt()).isEqualTo(3);
+        assertThat(valueInCategoryWithComment.getAsInt()).isEqualTo(5);
+        assertThat(valueInNestedCategory.getAsInt()).isEqualTo(10);
+        assertThat(valueInOtherNestedCategory.getAsInt()).isEqualTo(20);
 
         // Parse back to default values
         spec.parseDefaults();
@@ -78,9 +86,17 @@ public class IntegrationTests
         assertThat(stringValue.get()).isEqualTo("wibby wabble");
         assertThat(floatValue.getAsFloat()).isEqualTo(1.5f);
         assertThat(valueWithComment.getAsBoolean()).isFalse();
+        assertThat(valueWithMultilineComment.getAsBoolean()).isFalse();
+        assertThat(intValueWithRangeComment.getAsInt()).isEqualTo(7);
+        assertThat(floatValueWithRangeComment.getAsFloat()).isEqualTo(7.5f);
 
         assertThat(enumValue.get()).isEqualTo(Day.MONDAY);
         assertThat(enumValueWithRestriction.get()).isEqualTo(Day.TUESDAY);
+
+        assertThat(valueInCategory.getAsInt()).isEqualTo(3);
+        assertThat(valueInCategoryWithComment.getAsInt()).isEqualTo(5);
+        assertThat(valueInNestedCategory.getAsInt()).isEqualTo(10);
+        assertThat(valueInOtherNestedCategory.getAsInt()).isEqualTo(20);
     }
 
     @Test
@@ -90,6 +106,11 @@ public class IntegrationTests
 
         final IntValue intValueOutOfRange = builder.define("intValueOutOfRange", 3, 1, 10);
         final FloatValue floatValueOutOfRange = builder.define("floatValueOutOfRange", 3.0f, 1.0f, 10.0f);
+
+        final FloatValue floatValueCoercedFromInt = builder.define("floatValueCoercedFromInt", 3.0f);
+
+        final TypeValue<Day> enumValueWithRestriction = builder.comment("Must be a weekday").define("enumValueWithRestriction", Day.TUESDAY, Day.class, Day.MONDAY, Day.TUESDAY, Day.WEDNESDAY, Day.THURSDAY, Day.FRIDAY);
+        final TypeValue<Day> enumValueInvalid = builder.define("enumValueInvalid", Day.MONDAY, Day.class);
 
         final Spec spec = builder.build();
 
@@ -106,13 +127,18 @@ public class IntegrationTests
         EpsilonUtil.parse(spec, modifiedConfig, errors::add, overwrite::setTrue);
 
         assertThat(errors).containsExactly(
-              "Reading intValueOutOfRange: Value 50 not in range [1, 10]",
-              "Reading floatValueOutOfRange: Value 0.54321 not in range [1.0, 10.0]"
+            "Reading intValueOutOfRange: Value 50 not in range [1, 10]",
+            "Reading floatValueOutOfRange: Value 0.54321 not in range [1.0, 10.0]",
+            "Reading enumValueWithRestriction: Invalid value: 'SUNDAY', must be one of [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY]",
+            "Reading enumValueInvalid: Invalid value: 'monday', must be one of [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY]"
         );
         assertThat(overwrite.booleanValue()).isTrue();
 
         assertThat(intValueOutOfRange.getAsInt()).isEqualTo(3);
         assertThat(floatValueOutOfRange.getAsFloat()).isEqualTo(3.0f);
+        assertThat(floatValueCoercedFromInt.getAsFloat()).isEqualTo(5.0f);
+        assertThat(enumValueWithRestriction.get()).isEqualTo(Day.TUESDAY);
+        assertThat(enumValueInvalid.get()).isEqualTo(Day.MONDAY);
     }
 
     private Path getResource(String path) throws Exception

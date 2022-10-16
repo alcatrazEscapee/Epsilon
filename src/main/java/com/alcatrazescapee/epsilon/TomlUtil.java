@@ -224,13 +224,13 @@ public class TomlUtil
 
         void parseCategory()
         {
-            final List<String> category = new ArrayList<>();
             if (!hasNext() || !(peek() instanceof TName))
             {
                 // Must have at least one entry
                 error = true;
                 return;
             }
+            final List<String> category = new ArrayList<>();
             while (hasNext() && peek() instanceof TName name)
             {
                 category.add(name.value);
@@ -238,7 +238,7 @@ public class TomlUtil
                 if (peek() == TLiteral.RIGHT_BRACKET)
                 {
                     next();
-                    pushCategory(category);
+                    this.category = String.join(".", category);
                     break;
                 }
                 else if (peek() == TLiteral.DOT)
@@ -266,7 +266,8 @@ public class TomlUtil
                 error = true;
                 return;
             }
-            pushKeyValuePair(key, value);
+            final String longKey = category == null ? key : category + "." + key;
+            this.values.put(longKey, value);
         }
 
         Object parseValue()
@@ -317,17 +318,6 @@ public class TomlUtil
             final Token t = peek();
             index++;
             return t;
-        }
-
-        void pushCategory(List<String> category)
-        {
-            this.category = String.join(".", category);
-        }
-
-        void pushKeyValuePair(String key, Object value)
-        {
-            final String longKey = category == null ? key : category + "." + key;
-            this.values.put(longKey, value);
         }
     }
 }

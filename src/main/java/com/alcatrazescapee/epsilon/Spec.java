@@ -27,17 +27,17 @@ public final class Spec
         this.root = root;
     }
 
-    public void write(FileWriter writer) throws IOException
+    void write(FileWriter writer) throws IOException
     {
         root.write(writer, 0);
     }
 
-    public void parse(Map<String, Object> element, Consumer<ParseError> error)
+    void parse(Map<String, Object> element, Consumer<ParseError> error)
     {
         root.parse(element, error);
     }
 
-    public void parseDefaults()
+    void parseDefaults()
     {
         root.parseDefaults();
     }

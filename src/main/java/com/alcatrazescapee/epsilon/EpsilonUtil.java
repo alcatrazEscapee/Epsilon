@@ -30,6 +30,7 @@ public final class EpsilonUtil
         if (Files.notExists(path))
         {
             onWrite.run();
+            return;
         }
 
         final String text;
