@@ -224,14 +224,14 @@ public class TomlUtil
 
         void parseCategory()
         {
-            if (!hasNext() || !(peek() instanceof TName))
+            if (!(peek() instanceof TName))
             {
                 // Must have at least one entry
                 error = true;
                 return;
             }
             final List<String> category = new ArrayList<>();
-            while (hasNext() && peek() instanceof TName name)
+            while (peek() instanceof TName name)
             {
                 category.add(name.value);
                 next();

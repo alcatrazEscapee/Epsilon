@@ -16,22 +16,22 @@ import com.alcatrazescapee.epsilon.value.Value;
 /**
  * A builder for a specification. {@link Value} forms the bridge between the internal spec which is used to populate from IR.
  */
-public interface SpecBuilder<S>
+public interface SpecBuilder
 {
     /**
      * Pushes a category with the name {@code name} onto the stack. Allows nesting of named config elements, which are seperated with a dot '.' character.
      */
-    SpecBuilder<S> push(String name);
+    SpecBuilder push(String name);
 
     /**
      * Pops the last category from the stack.
      */
-    SpecBuilder<S> pop();
+    SpecBuilder pop();
 
     /**
      * Pops the last {@code n} categories from the stack.
      */
-    default SpecBuilder<S> pop(int n)
+    default SpecBuilder pop(int n)
     {
         for (int i = 0; i < n; i++) pop();
         return this;
@@ -40,7 +40,7 @@ public interface SpecBuilder<S>
     /**
      * Swaps the top element of the stack.
      */
-    default SpecBuilder<S> swap(String name)
+    default SpecBuilder swap(String name)
     {
         return pop().push(name);
     }
@@ -48,7 +48,7 @@ public interface SpecBuilder<S>
     /**
      * Defines a comment, which will be attached to the next value created by any invocation of {@code define()}. Subsequent calls to this will append to the existing comment.
      */
-    SpecBuilder<S> comment(String... comment);
+    SpecBuilder comment(String... comment);
 
     /**
      * Define an unrestricted integer value with the name {@code name} and a default value of {@code defaultValue}.
@@ -149,5 +149,5 @@ public interface SpecBuilder<S>
     /**
      * Builds the completed spec.
      */
-    S build();
+    Spec build();
 }

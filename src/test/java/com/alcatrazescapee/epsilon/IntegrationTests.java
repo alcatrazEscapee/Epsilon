@@ -20,7 +20,7 @@ public class IntegrationTests
     @Test
     public void testLoadingModifiedAndDefaultConfig() throws Exception
     {
-        final SpecBuilder<Spec> builder = Spec.builder();
+        final SpecBuilder builder = Spec.builder();
 
         final BoolValue boolValue = builder.define("boolValue", false);
         final IntValue intValue = builder.define("intValue", 0);
@@ -102,7 +102,7 @@ public class IntegrationTests
     @Test
     public void testLoadingConfigWithInvalidValues() throws Exception
     {
-        final SpecBuilder<Spec> builder = Spec.builder();
+        final SpecBuilder builder = Spec.builder();
 
         final IntValue intValueOutOfRange = builder.define("intValueOutOfRange", 3, 1, 10);
         final FloatValue floatValueOutOfRange = builder.define("floatValueOutOfRange", 3.0f, 1.0f, 10.0f);

@@ -15,7 +15,7 @@ import com.alcatrazescapee.epsilon.value.Value;
 
 public final class Spec
 {
-    public static SpecBuilder<Spec> builder()
+    public static SpecBuilder builder()
     {
         return new Builder();
     }
@@ -115,7 +115,7 @@ public final class Spec
         }
     }
 
-    static class Builder implements SpecBuilder<Spec>
+    static class Builder implements SpecBuilder
     {
         private static final Pattern NAME_PATTERN = Pattern.compile("[A-Za-z][A-Za-z0-9-_]*");
 
@@ -130,7 +130,7 @@ public final class Spec
         }
 
         @Override
-        public SpecBuilder<Spec> push(String name)
+        public SpecBuilder push(String name)
         {
             final Node top = peek();
             Preconditions.checkArgument(!name.isEmpty(), "Name is not allowed to be empty.");
@@ -143,7 +143,7 @@ public final class Spec
         }
 
         @Override
-        public SpecBuilder<Spec> pop()
+        public SpecBuilder pop()
         {
             Preconditions.checkArgument(stack.size() > 1, "Tried to pop from an empty stack.");
             stack.remove(stack.size() - 1);
@@ -151,7 +151,7 @@ public final class Spec
         }
 
         @Override
-        public SpecBuilder<Spec> comment(String... comment)
+        public SpecBuilder comment(String... comment)
         {
             this.comment = this.comment == null ? comment : ArrayUtils.addAll(this.comment, comment);
             return this;
