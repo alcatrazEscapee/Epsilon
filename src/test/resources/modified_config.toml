@@ -1,0 +1,47 @@
+boolValue = true
+
+intValue = 1
+
+floatValue = 3.14
+
+stringValue = "boobly booble"
+
+# Example comment
+valueWithComment = true
+
+# Example
+# multiline
+# comment
+valueWithMultilineComment = false
+
+# Range: [5, 10]
+intValueWithRangeComment = 7
+
+# Range: [5.0, 10.54321]
+floatValueWithRangeComment = 7.5
+
+enumValue = "SATURDAY"
+
+# Must be a weekday
+enumValueWithRestriction = "WEDNESDAY"
+
+
+[category]
+
+    valueInCategory = 3
+
+    # Comment within category
+    # Range: [1, 10]
+    valueInCategoryWithComment = 5
+
+
+    [category.nestedCategory]
+
+        valueInNestedCategory = 10
+
+
+    [category.otherNestedCategory]
+
+        # Another category
+        valueInOtherNestedCategory = 20
+

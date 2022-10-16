@@ -1,0 +1,6 @@
+# Range: [1, 10]
+intValueOutOfRange = 50
+
+# Range: [1.0, 10.0]
+floatValueOutOfRange = 0.54321
+

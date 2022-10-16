@@ -1,0 +1,49 @@
+boolValue = false
+
+intValue = 0
+
+floatValue = 1.5
+
+stringValue = "wibby wabble"
+
+# Example comment
+valueWithComment = false
+
+# Example
+# multiline
+# comment
+valueWithMultilineComment = false
+
+# Range: [5, 10]
+intValueWithRangeComment = 7
+
+# Range: [5.0, 10.54321]
+floatValueWithRangeComment = 7.5
+
+# Allowed values: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+enumValue = "MONDAY"
+
+# Must be a weekday
+# Allowed values: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY
+enumValueWithRestriction = "TUESDAY"
+
+
+[category]
+
+    valueInCategory = 3
+
+    # Comment within category
+    # Range: [1, 10]
+    valueInCategoryWithComment = 5
+
+
+    [category.nestedCategory]
+
+        valueInNestedCategory = 10
+
+
+    [category.otherNestedCategory]
+
+        # Another category
+        valueInOtherNestedCategory = 20
+

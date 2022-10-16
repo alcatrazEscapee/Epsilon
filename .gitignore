@@ -1,0 +1,11 @@
+*
+!*/
+!/.gitignore
+
+!/build.gradle
+!/gradlew
+!/gradlew.bat
+
+!/src/main/java/**/*.java
+!/src/test/java/**/*.java
+!/src/test/resources/**/*.toml
