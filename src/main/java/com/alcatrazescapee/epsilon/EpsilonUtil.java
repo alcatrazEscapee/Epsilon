@@ -49,7 +49,7 @@ public final class EpsilonUtil
         final Map<String, Object> data = result.map();
         spec.parse(data, e -> {
             errors.setTrue();
-            onError.accept(e.getMessage());
+            onError.accept(e);
         });
 
         if (errors.booleanValue())

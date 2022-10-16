@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.text.StringEscapeUtils;
+import org.jetbrains.annotations.Nullable;
 
-public class TomlUtil
+public final class TomlUtil
 {
     public static TomlParseResult parse(String text)
     {
@@ -188,7 +189,7 @@ public class TomlUtil
         final List<Token> inputs;
         final Map<String, Object> values;
 
-        String category;
+        @Nullable String category;
         int index;
         boolean error;
 
@@ -270,6 +271,7 @@ public class TomlUtil
             this.values.put(longKey, value);
         }
 
+        @Nullable
         Object parseValue()
         {
             if (peek() == TLiteral.LEFT_BRACKET)
@@ -284,6 +286,7 @@ public class TomlUtil
             return null;
         }
 
+        @Nullable
         List<Object> parseListValue()
         {
             final List<Object> list = new ArrayList<>();

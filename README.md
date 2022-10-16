@@ -32,7 +32,7 @@ Spec spec = builder.build();
 
 // When desired, parse the config file
 // The LOGGER::warn is used to record errors either during parsing, or invalid config values
-EpsilonUtil.parse(spec, Path.of("config-file.toml"), LOGGER::warn)
+EpsilonUtil.parse(spec, Path.of("config-file.toml"), LOGGER::warn);
 
 // Access of the config values can be done at any time after that.
 int value = intValue.getAsInt();

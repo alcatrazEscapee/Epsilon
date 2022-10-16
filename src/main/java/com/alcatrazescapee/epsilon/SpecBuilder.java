@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.alcatrazescapee.epsilon.value.BoolValue;
@@ -105,7 +104,6 @@ public interface SpecBuilder
     {
         return define(name, defaultValue, Type.STRING.map(value -> {
             if (!predicate.test(value)) throw new ParseError(error);
-            return value;
         }, TypeValue::new));
     }
 

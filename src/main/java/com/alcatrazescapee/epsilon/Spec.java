@@ -32,7 +32,7 @@ public final class Spec
         root.write(writer, 0);
     }
 
-    void parse(Map<String, Object> element, Consumer<ParseError> error)
+    void parse(Map<String, Object> element, Consumer<String> error)
     {
         root.parse(element, error);
     }
@@ -73,24 +73,21 @@ public final class Spec
                         writer.write("%s# %s\n".formatted(prefix, line));
                     }
                 }
-                writer.write("%s%s = %s\n".formatted(prefix, typed.name(), TomlUtil.writeValue(typed.write())));
-                writer.write("\n");
+                writer.write("%s%s = %s\n\n".formatted(prefix, typed.name(), TomlUtil.writeValue(typed.write())));
             }
 
             for (final Node value : children.values())
             {
-                writer.write("\n");
-                writer.write("%s[%s]\n".formatted(prefix, value.name));
-                writer.write("\n");
+                writer.write("\n%s[%s]\n\n".formatted(prefix, value.name));
                 value.write(writer, depth + 1);
             }
         }
 
-        void parse(Map<String, Object> map, Consumer<ParseError> error)
+        void parse(Map<String, Object> map, Consumer<String> error)
         {
             for (final Node value : children.values())
             {
-                ParseError.resolve(() -> value.parse(map, error), error);
+                value.parse(map, error);
             }
             for (final TypedValue<?, ?, ?> typed : values.values())
             {
@@ -162,7 +159,7 @@ public final class Spec
         {
             Preconditions.checkArgument(NAME_PATTERN.matcher(name).matches(), "Name must match the pattern [A-Za-z][A-Za-z0-9-_]*");
             Preconditions.checkArgument(!peek().containsKey(name), "Name '" + name + "' is already defined.");
-            final V value = converter.create();
+            final V value = converter.create(defaultValue);
             final String longName = stack.size() <= 1 ? name : stack.stream().map(e -> e.name + ".").collect(Collectors.joining()) + name;
             peek().values.put(name, new TypedValue<>(name, longName, comment, value, defaultValue, converter));
             value.set(defaultValue);

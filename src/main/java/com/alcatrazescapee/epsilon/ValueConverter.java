@@ -3,7 +3,6 @@ package com.alcatrazescapee.epsilon;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import com.alcatrazescapee.epsilon.value.BoolValue;
 import com.alcatrazescapee.epsilon.value.FloatValue;
@@ -11,7 +10,7 @@ import com.alcatrazescapee.epsilon.value.IntValue;
 import com.alcatrazescapee.epsilon.value.TypeValue;
 import com.alcatrazescapee.epsilon.value.Value;
 
-public record ValueConverter<T, U, V extends Value<U>>(Type<T> type, Function<T, U> parseFunction, Function<U, T> writeFunction, Supplier<V> factory)
+public record ValueConverter<T, U, V extends Value<U>>(Type<T> type, Function<T, U> parseFunction, Function<U, T> writeFunction, Function<U, V> factory)
 {
     public static final ValueConverter<Integer, Integer, IntValue> INT = Type.INT.map(IntValue::new);
     public static final ValueConverter<Float, Float, FloatValue> FLOAT = Type.FLOAT.map(FloatValue::new);
@@ -23,7 +22,6 @@ public record ValueConverter<T, U, V extends Value<U>>(Type<T> type, Function<T,
     {
         return Type.INT.map(value -> {
             if (value < minValue || value > maxValue) throw new ParseError("Value " + value + " not in range [" + minValue + ", " + maxValue + "]");
-            return value;
         }, IntValue::new);
     }
 
@@ -31,7 +29,6 @@ public record ValueConverter<T, U, V extends Value<U>>(Type<T> type, Function<T,
     {
         return Type.FLOAT.map(value -> {
             if (value < minValue || value > maxValue) throw new ParseError("Value " + value + " not in range [" + minValue + ", " + maxValue + "]");
-            return value;
         }, FloatValue::new);
     }
 
@@ -56,8 +53,8 @@ public record ValueConverter<T, U, V extends Value<U>>(Type<T> type, Function<T,
         return writeFunction.apply(value.get());
     }
 
-    public V create()
+    public V create(U defaultValue)
     {
-        return factory.get();
+        return factory.apply(defaultValue);
     }
 }

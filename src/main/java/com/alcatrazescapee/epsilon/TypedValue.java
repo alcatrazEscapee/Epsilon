@@ -11,9 +11,10 @@ record TypedValue<T, U, V extends Value<U>>(String name, String longName, String
         return converter.write(value);
     }
 
-    void parse(Object object, Consumer<ParseError> error)
+    void parse(Object object, Consumer<String> error)
     {
-        ParseError.resolve(() -> converter.parseInto(object, value), e -> error.accept(e.map(m -> "Reading " + longName + ": " + m)));
+        try { converter.parseInto(object, value); }
+        catch (ParseError e) { error.accept("Reading " + longName + ": " + e.getMessage()); }
     }
 
     void parseDefault()

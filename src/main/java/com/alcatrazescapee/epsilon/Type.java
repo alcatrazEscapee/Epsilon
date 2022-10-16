@@ -1,8 +1,8 @@
 package com.alcatrazescapee.epsilon;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import com.alcatrazescapee.epsilon.value.TypeValue;
 import com.alcatrazescapee.epsilon.value.Value;
@@ -48,14 +48,17 @@ public interface Type<T>
 
     T parse(Object token);
 
-    default <V extends Value<T>> ValueConverter<T, T, V> map(Supplier<V> factory)
+    default <V extends Value<T>> ValueConverter<T, T, V> map(Function<T, V> factory)
     {
         return map(Function.identity(), Function.identity(), factory);
     }
 
-    default <V extends Value<T>> ValueConverter<T, T, V> map(Function<T, T> parseFunction, Supplier<V> factory)
+    default <V extends Value<T>> ValueConverter<T, T, V> map(Consumer<T> parseFunction, Function<T, V> factory)
     {
-        return map(parseFunction, Function.identity(), factory);
+        return map(t -> {
+            parseFunction.accept(t);
+            return t;
+        }, Function.identity(), factory);
     }
 
     default <U> ValueConverter<T, U, TypeValue<U>> map(Function<T, U> parseFunction, Function<U, T> writeFunction)
@@ -63,7 +66,7 @@ public interface Type<T>
         return map(parseFunction, writeFunction, TypeValue::new);
     }
 
-    default <U, V extends Value<U>> ValueConverter<T, U, V> map(Function<T, U> parseFunction, Function<U, T> writeFunction, Supplier<V> factory)
+    default <U, V extends Value<U>> ValueConverter<T, U, V> map(Function<T, U> parseFunction, Function<U, T> writeFunction, Function<U, V> factory)
     {
         return new ValueConverter<>(this, parseFunction, writeFunction, factory);
     }
