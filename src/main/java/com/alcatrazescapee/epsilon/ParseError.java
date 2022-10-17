@@ -3,7 +3,7 @@ package com.alcatrazescapee.epsilon;
 import java.util.function.Supplier;
 
 /**
- * An error occuring during a transformation from a config value or type to a derived value as specified in a {@link Spec}.
+ * An error occurring during a transformation from a config value or type to a derived value as specified in a {@link Spec}.
  */
 public final class ParseError extends RuntimeException
 {
