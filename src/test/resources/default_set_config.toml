@@ -1,0 +1,6 @@
+# Range: [1, 10]
+intValue = 7
+
+# Range: [1.0, 10.0]
+floatValue = 7.0
+

@@ -51,7 +51,7 @@ public class IntegrationTests
 
         final Spec spec = builder.build();
 
-        final Path exampleConfig = Path.of("./out/example_config.toml");
+        final Path exampleConfig = Path.of("./build/example_config.toml");
         final Path defaultConfig = getResource("default_config.toml");
         final Path modifiedConfig = getResource("modified_config.toml");
 
@@ -114,7 +114,7 @@ public class IntegrationTests
 
         final Spec spec = builder.build();
 
-        final Path exampleConfig = Path.of("./out/example_invalid_config.toml");
+        final Path exampleConfig = Path.of("./build/example_invalid_config.toml");
         final Path defaultConfig = getResource("default_invalid_config.toml");
         final Path modifiedConfig = getResource("modified_invalid_config.toml");
 
@@ -139,6 +139,67 @@ public class IntegrationTests
         assertThat(floatValueCoercedFromInt.getAsFloat()).isEqualTo(5.0f);
         assertThat(enumValueWithRestriction.get()).isEqualTo(Day.TUESDAY);
         assertThat(enumValueInvalid.get()).isEqualTo(Day.MONDAY);
+    }
+
+    @Test
+    public void testModifyingConfigUsingSetThenSaving() throws Exception
+    {
+        final SpecBuilder builder = Spec.builder();
+
+        final IntValue intValue = builder.define("intValue", 3, 1, 10);
+        final FloatValue floatValue = builder.define("floatValue", 3.0f, 1.0f, 10.0f);
+
+        final Spec spec = builder.build();
+
+        final Path exampleConfig = Path.of("./build/example_set_config.toml");
+        final Path defaultConfig = getResource("default_set_config.toml");
+
+        intValue.set(7);
+        floatValue.set(7.0f);
+
+        // write() should use the config values exactly, and not reset to defaults
+        EpsilonUtil.write(spec, exampleConfig, Assertions::fail);
+
+        assertThat(exampleConfig).hasSameTextualContentAs(defaultConfig);
+
+        assertThat(intValue.getAsInt()).isEqualTo(7);
+        assertThat(floatValue.getAsFloat()).isEqualTo(7.0f);
+    }
+
+    @Test
+    public void testMissingConfigOptionCausesWriting() throws Exception
+    {
+        final SpecBuilder builder = Spec.builder();
+
+        final IntValue intValue = builder.define("intValue", 3);
+        final FloatValue floatValue = builder.define("floatValue", 3.0f);
+
+        builder.push("insideBox");
+
+        final BoolValue boolValueInCategory = builder.define("boolValueInCategory", true);
+
+        builder.pop();
+
+        final Spec spec = builder.build();
+
+        final Path defaultConfig = getResource("default_missing_options_config.toml");
+
+        // write() should use the config values exactly, and not reset to defaults
+        final List<String> errors = new ArrayList<>();
+        final MutableBoolean overwrite = new MutableBoolean(false);
+
+        EpsilonUtil.parse(spec, defaultConfig, errors::add, overwrite::setTrue);
+
+        assertThat(errors).containsExactly(
+            "Missing value for: 'intValue'",
+            "Missing value for: 'floatValue'",
+            "Missing value for: 'insideBox.boolValueInCategory'"
+        );
+        assertThat(overwrite.booleanValue()).isTrue();
+
+        assertThat(intValue.getAsInt()).isEqualTo(3);
+        assertThat(floatValue.getAsFloat()).isEqualTo(3.0f);
+        assertThat(boolValueInCategory.getAsBoolean()).isTrue();
     }
 
     private Path getResource(String path) throws Exception

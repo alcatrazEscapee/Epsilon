@@ -85,10 +85,6 @@ public final class Spec
 
         void parse(Map<String, Object> map, Consumer<String> error)
         {
-            for (final Node value : children.values())
-            {
-                value.parse(map, error);
-            }
             for (final TypedValue<?, ?, ?> typed : values.values())
             {
                 final Object value = map.get(typed.longName());
@@ -96,18 +92,26 @@ public final class Spec
                 {
                     typed.parse(value, error);
                 }
+                else
+                {
+                    error.accept("Missing value for: '%s'".formatted(typed.longName()));
+                }
+            }
+            for (final Node value : children.values())
+            {
+                value.parse(map, error);
             }
         }
 
         void parseDefaults()
         {
-            for (final Node value : children.values())
-            {
-                value.parseDefaults();
-            }
             for (final TypedValue<?, ?, ?> value : values.values())
             {
                 value.parseDefault();
+            }
+            for (final Node value : children.values())
+            {
+                value.parseDefaults();
             }
         }
     }
@@ -160,7 +164,7 @@ public final class Spec
             Preconditions.checkArgument(NAME_PATTERN.matcher(name).matches(), "Name must match the pattern [A-Za-z][A-Za-z0-9-_]*");
             Preconditions.checkArgument(!peek().containsKey(name), "Name '" + name + "' is already defined.");
             final V value = converter.create(defaultValue);
-            final String longName = stack.size() <= 1 ? name : stack.stream().map(e -> e.name + ".").collect(Collectors.joining()) + name;
+            final String longName = stack.size() <= 1 ? name : peek().name + "." + name;
             peek().values.put(name, new TypedValue<>(name, longName, comment, value, defaultValue, converter));
             value.set(defaultValue);
             this.comment = null;
