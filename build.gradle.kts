@@ -32,7 +32,7 @@ tasks.withType<Test> {
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        create<MavenPublication>("mavenJava") {
             from(components["java"])
             groupId = "com.alcatrazescapee"
             artifactId = "epsilon"
@@ -56,7 +56,7 @@ artifactory {
         defaults {
             publications("mavenJava")
             setPublishArtifacts(true)
-            setPublishIvy(true)
+            setPublishPom(true)
         }
     }
 }

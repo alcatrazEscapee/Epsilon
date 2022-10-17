@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.alcatrazescapee:epsilon:0.1'
+    implementation 'com.alcatrazescapee:epsilon:0.2'
 }
 ```
 
@@ -45,13 +45,13 @@ final BoolValue boolValue = builder.define("boolValue", false);
 
 builder.pop();
 
-Spec spec = builder.build();
+final Spec spec = builder.build();
 
 // When desired, parse the config file
 // The LOGGER::warn is used to record errors either during parsing, or invalid config values
 EpsilonUtil.parse(spec, Path.of("config-file.toml"), LOGGER::warn);
 
 // Access of the config values can be done at any time after that.
-int value = intValue.getAsInt();
-
+final int value = intValue.getAsInt();
+final boolean bool = boolValue.getAsBoolean();
 ```
