@@ -58,7 +58,7 @@ jobs:
             }
             
             dependencies {
-                implementation "com.alcatrazescapee:epsilon:{{ steps.get_version.outputs.result }}"
+                implementation "com.alcatrazescapee:epsilon:${{ steps.get_version.outputs.result }}"
             }
             ```
           draft: true
