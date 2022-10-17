@@ -14,7 +14,7 @@ repositories {
 dependencies {
 
     implementation("com.google.guava:guava:31.0.1-jre")
-    implementation("org.apache.commons:commons-text:1.10.0")
+    implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.jetbrains:annotations:23.0.0")
 
     testImplementation("org.assertj:assertj-core:3.23.1")
