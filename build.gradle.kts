@@ -1,13 +1,11 @@
 plugins {
-    id 'com.jfrog.artifactory' version '4.25.4'
-    id 'maven-publish'
-    id 'java'
+    java
+    id("maven-publish")
+    id("com.jfrog.artifactory") version "4.25.4"
 }
 
-final String envVersion = System.getenv("VERSION")
-
-group("com.alcatrazescapee")
-version(envVersion == null ? "indev" : envVersion)
+group = "com.alcatrazescapee"
+version = System.getenv("VERSION") ?: "indev"
 
 repositories {
     mavenCentral()
@@ -15,7 +13,7 @@ repositories {
 
 dependencies {
 
-    implementation('com.google.guava:guava:31.0.1-jre')
+    implementation("com.google.guava:guava:31.0.1-jre")
     implementation("org.apache.commons:commons-text:1.10.0")
     implementation("org.jetbrains:annotations:23.0.0")
 
@@ -28,15 +26,14 @@ java {
     withSourcesJar()
 }
 
-test {
+tasks.withType<Test> {
     useJUnitPlatform()
 }
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            from components.java
-
+        create<MavenPublication>("maven") {
+            from(components["java"])
             groupId = "com.alcatrazescapee"
             artifactId = "epsilon"
             version = "${project.version}"
@@ -47,18 +44,19 @@ publishing {
     }
 }
 
+
 artifactory {
-    contextUrl = "https://alcatrazescapee.jfrog.io/artifactory"
+    setContextUrl("https://alcatrazescapee.jfrog.io/artifactory")
     publish {
         repository {
-            repoKey = "mods"
-            username = System.getenv("ARTIFACTORY_USERNAME")
-            password = System.getenv("ARTIFACTORY_PASSWORD")
+            setRepoKey("mods")
+            setUsername(System.getenv("ARTIFACTORY_USERNAME"))
+            setPassword(System.getenv("ARTIFACTORY_PASSWORD"))
         }
         defaults {
             publications("mavenJava")
-            publishArtifacts = true
-            publishIvy = false
+            setPublishArtifacts(true)
+            setPublishIvy(true)
         }
     }
 }

@@ -10,8 +10,25 @@ This is a minimal library for handling simple configuration files. It was design
 
 ### Usage
 
+Include this project via gradle:
+
+```groovy
+repositories {
+    maven {
+        url = 'https://alcatrazescapee.jfrog.io/artifactory/mods'
+    }
+}
+
+dependencies {
+    implementation 'com.alcatrazescapee:epsilon:0.1'
+}
+```
+
+An example usage of the library can be found below:
+
 ```java
 import com.alcatrazescapee.epsilon.*;
+import com.alcatrazescapee.epsilon.value.*;
 
 // Define a spec, which is a representation of all config options, comments, and value restrictions.
 final SpecBuilder builder = Spec.builder();
