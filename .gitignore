@@ -8,6 +8,8 @@
 !/gradlew
 !/gradlew.bat
 
+!/.github/workflows/*.yml
+
 !/src/main/java/**/*.java
 !/src/test/java/**/*.java
 !/src/test/resources/**/*.toml
