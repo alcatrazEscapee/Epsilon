@@ -10,6 +10,9 @@
 
 !/.github/workflows/*.yml
 
+!/gradle/wrapper/gradle-wrapper.jar
+!/gradle/wrapper/gradle-wrapper.properties
+
 !/src/main/java/**/*.java
 !/src/test/java/**/*.java
 !/src/test/resources/**/*.toml
