@@ -34,12 +34,18 @@ public class IntegrationTests
         final TypeValue<Day> enumValue = builder.define("enumValue", Day.MONDAY, Day.class);
         final TypeValue<Day> enumValueWithRestriction = builder.comment("Must be a weekday").define("enumValueWithRestriction", Day.TUESDAY, Day.class, Day.MONDAY, Day.TUESDAY, Day.WEDNESDAY, Day.THURSDAY, Day.FRIDAY);
 
-        builder.push("category");
+        builder
+            .comment("Example comment on a top level category")
+            .comment("This comment", "has", "multiple", "lines")
+            .push("category");
 
         final IntValue valueInCategory = builder.define("valueInCategory", 3);
         final IntValue valueInCategoryWithComment = builder.comment("Comment within category").define("valueInCategoryWithComment", 5, 1, 10);
 
-        builder.push("nestedCategory");
+        builder
+            .comment("Example comment on a nested category")
+            .comment("Note how the indent matches up nicely")
+            .push("nestedCategory");
 
         final IntValue valueInNestedCategory = builder.define("valueInNestedCategory", 10);
 

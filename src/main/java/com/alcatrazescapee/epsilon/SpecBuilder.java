@@ -46,6 +46,7 @@ public interface SpecBuilder
 
     /**
      * Defines a comment, which will be attached to the next value created by any invocation of {@code define()}. Subsequent calls to this will append to the existing comment.
+     * If this is invoked before a call to {@link #push(String)}, the comment will be instead prepended to the category.
      */
     SpecBuilder comment(String... comment);
 

@@ -28,6 +28,11 @@ enumValue = "MONDAY"
 enumValueWithRestriction = "TUESDAY"
 
 
+# Example comment on a top level category
+# This comment
+# has
+# multiple
+# lines
 [category]
 
     valueInCategory = 3
@@ -37,6 +42,8 @@ enumValueWithRestriction = "TUESDAY"
     valueInCategoryWithComment = 5
 
 
+    # Example comment on a nested category
+    # Note how the indent matches up nicely
     [category.nestedCategory]
 
         valueInNestedCategory = 10

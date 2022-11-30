@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.alcatrazescapee:epsilon:0.2'
+    implementation 'com.alcatrazescapee:epsilon:0.4'
 }
 ```
 
@@ -38,6 +38,7 @@ final SpecBuilder builder = Spec.builder();
 final IntValue intValue = builder.comment("An example integer value").define("intValue", 5);
 
 // push() and pop() groups config options into categories.
+// comment() can be used to add comments directly to categories
 builder.push("category");
 
 // This value is grouped under the category 'category'

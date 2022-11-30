@@ -25,7 +25,11 @@ enumValue = "SATURDAY"
 # Must be a weekday
 enumValueWithRestriction = "WEDNESDAY"
 
-
+# Example comment on a top level category
+# This comment
+# has
+# multiple
+# lines
 [category]
 
     valueInCategory = 3
@@ -34,7 +38,8 @@ enumValueWithRestriction = "WEDNESDAY"
     # Range: [1, 10]
     valueInCategoryWithComment = 5
 
-
+    # Example comment on a nested category
+    # Note how the indent matches up nicely
     [category.nestedCategory]
 
         valueInNestedCategory = 10

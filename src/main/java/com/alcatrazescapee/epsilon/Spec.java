@@ -11,6 +11,7 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.alcatrazescapee.epsilon.value.Value;
+import org.jetbrains.annotations.Nullable;
 
 public final class Spec
 {
@@ -47,11 +48,11 @@ public final class Spec
         void write(String text) throws IOException;
     }
 
-    record Node(String name, Map<String, Node> children, Map<String, TypedValue<?, ?, ?>> values)
+    record Node(String name, @Nullable String[] comment, Map<String, Node> children, Map<String, TypedValue<?, ?, ?>> values)
     {
-        Node(String name)
+        Node(String name, @Nullable String[] comment)
         {
-            this(name, new LinkedHashMap<>(), new LinkedHashMap<>());
+            this(name, comment, new LinkedHashMap<>(), new LinkedHashMap<>());
         }
 
         boolean containsKey(String key)
@@ -77,7 +78,15 @@ public final class Spec
 
             for (final Node value : children.values())
             {
-                writer.write("\n%s[%s]\n\n".formatted(prefix, value.name));
+                writer.write("\n");
+                if (value.comment() != null)
+                {
+                    for (final String line : value.comment())
+                    {
+                        writer.write("%s# %s\n".formatted(prefix, line));
+                    }
+                }
+                writer.write("%s[%s]\n\n".formatted(prefix, value.name));
                 value.write(writer, depth + 1);
             }
         }
@@ -125,7 +134,7 @@ public final class Spec
         Builder()
         {
             this.stack = new ArrayList<>();
-            this.stack.add(new Node(""));
+            this.stack.add(new Node("", null));
             this.comment = null;
         }
 
@@ -136,9 +145,10 @@ public final class Spec
             Preconditions.checkArgument(!name.isEmpty(), "Name is not allowed to be empty.");
             Preconditions.checkArgument(!top.containsKey(name), "Name '" + name + "' is already defined.");
             Preconditions.checkArgument(NAME_PATTERN.matcher(name).matches(), "Name must match the pattern [A-Za-z][A-Za-z0-9-_]*");
-            final Node node = new Node(top.name.isEmpty() ? name : top.name + "." + name);
+            final Node node = new Node(top.name.isEmpty() ? name : top.name + "." + name, comment);
             top.children.put(name, node);
             stack.add(node);
+            this.comment = null;
             return this;
         }
 

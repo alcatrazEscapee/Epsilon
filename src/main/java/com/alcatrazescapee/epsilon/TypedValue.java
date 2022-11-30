@@ -3,8 +3,9 @@ package com.alcatrazescapee.epsilon;
 import java.util.function.Consumer;
 
 import com.alcatrazescapee.epsilon.value.Value;
+import org.jetbrains.annotations.Nullable;
 
-record TypedValue<T, U, V extends Value<U>>(String name, String longName, String[] comment, V value, U defaultValue, ValueConverter<T, U, V> converter)
+record TypedValue<T, U, V extends Value<U>>(String name, String longName, @Nullable String[] comment, V value, U defaultValue, ValueConverter<T, U, V> converter)
 {
     T write()
     {
