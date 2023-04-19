@@ -3,9 +3,11 @@ package com.alcatrazescapee.epsilon;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.alcatrazescapee.epsilon.value.TypeValue;
 import com.alcatrazescapee.epsilon.value.Value;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * A {@code Type<T>} is a type that is able to serialize to toml directly. As such, it must be one of the supported primitive types ({@code BOOL, INT, FLOAT, STRING}), or a derived type such as a list (i.e. {@code STRING_LIST}).
@@ -13,44 +15,84 @@ import com.alcatrazescapee.epsilon.value.Value;
  */
 public interface Type<T>
 {
-    Type<Boolean> BOOL = Type::asBool;
-    Type<Integer> INT = Type::asInt;
-    Type<Float> FLOAT = Type::asFloat;
-    Type<String> STRING = Type::asString;
-    Type<List<String>> STRING_LIST = t -> Type.asList(t, Type::asString);
-
-    static boolean asBool(Object token) throws ParseError
-    {
+    Type<Boolean> BOOL = token -> {
         if (token instanceof Boolean boolValue) return boolValue;
         throw new ParseError("Cannot convert " + token + " to boolean");
-    }
+    };
+    Type<Integer> INT = token -> {
+        if (token instanceof Integer intValue) return intValue;
+        throw new ParseError("Cannot convert " + token + " to int");
+    };
+    Type<Float> FLOAT = token -> {
+        if (token instanceof Float floatValue) return floatValue;
+        if (token instanceof Integer intValue) return intValue.floatValue();
+        throw new ParseError("Cannot convert " + token + " to float");
+    };
+    Type<String> STRING = new Type<>() {
+        @Override
+        public String parse(Object token)
+        {
+            if (token instanceof String string) return string;
+            throw new ParseError("Cannot convert " + token + " to string");
+        }
 
-    static int asInt(Object value) throws ParseError
+        @Override
+        @SuppressWarnings("deprecation")
+        public String write(String value)
+        {
+            return "\"%s\"".formatted(StringEscapeUtils.escapeJava(value));
+        }
+    };
+
+    Type<List<String>> STRING_LIST = Type.STRING.listOf();
+
+    /**
+     * @return A new type representing a {@code List<T>} of the underlying {@code elementType}
+     */
+    static <T> Type<List<T>> list(Type<T> elementType)
     {
-        if (value instanceof Integer intValue) return intValue;
-        throw new ParseError("Cannot convert " + value + " to int");
+        return new Type<>() {
+            @Override
+            public List<T> parse(Object token)
+            {
+                if (token instanceof List<?> value) return value.stream().map(elementType::parse).toList();
+                throw new ParseError("Cannot convert " + token + " to list");
+            }
+
+            @Override
+            public String write(List<T> value)
+            {
+                return "[%s]".formatted(value.stream()
+                    .map(elementType::write)
+                    .collect(Collectors.joining(", ")));
+            }
+        };
     }
 
-    static float asFloat(Object value) throws ParseError
+    /**
+     * Parses an object of type {@code <T>} from a toml value. The token will be a representable toml value such as int, boolean, string, or list.
+     * @param token A toml representable object value, which may be a {@link Integer}, {@link Boolean}, {@link Float}, {@link String}, or {@link List}.
+     * @return An intermediate representation of the object.
+     */
+    T parse(Object token) throws ParseError;
+
+    /**
+     * Writes this type to a toml representable string.
+     * @param value A value of the type {@code <T>}.
+     * @return A toml representable string.
+     */
+    default String write(T value)
     {
-        if (value instanceof Float floatValue) return floatValue;
-        if (value instanceof Integer intValue) return intValue;
-        throw new ParseError("Cannot convert " + value + " to float");
+        return String.valueOf(value);
     }
 
-    static String asString(Object value) throws ParseError
+    /**
+     * @return A new type representing a {@code List<T>} of this type.
+     */
+    default Type<List<T>> listOf()
     {
-        if (value instanceof String string) return string;
-        throw new ParseError("Cannot convert " + value + " to string");
+        return list(this);
     }
-
-    static <T> List<T> asList(Object token, Function<Object, T> element) throws ParseError
-    {
-        if (token instanceof List<?> value) return value.stream().map(element).toList();
-        throw new ParseError("Cannot convert " + token + " to list");
-    }
-
-    T parse(Object token);
 
     /**
      * Create a {@link ValueConverter} which holds a value of type {@code T}, in a value class of type {@code V}. Prefer using the constants in {@link ValueConverter} over using this directly.

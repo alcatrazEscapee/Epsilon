@@ -26,7 +26,7 @@ public final class EpsilonUtil
 
     public static void parse(Spec spec, Path path, Consumer<String> onError, Runnable onWrite)
     {
-        spec.parseDefaults();
+        spec.reset();
         if (Files.notExists(path))
         {
             onWrite.run();

@@ -37,9 +37,9 @@ public final class Spec
         root.parse(element, error);
     }
 
-    void parseDefaults()
+    void reset()
     {
-        root.parseDefaults();
+        root.reset();
     }
 
     @FunctionalInterface
@@ -73,7 +73,7 @@ public final class Spec
                         writer.write("%s# %s\n".formatted(prefix, line));
                     }
                 }
-                writer.write("%s%s = %s\n\n".formatted(prefix, typed.name(), TomlUtil.writeValue(typed.write())));
+                writer.write("%s%s = %s\n\n".formatted(prefix, typed.name(), typed.write()));
             }
 
             for (final Node value : children.values())
@@ -111,15 +111,15 @@ public final class Spec
             }
         }
 
-        void parseDefaults()
+        void reset()
         {
             for (final TypedValue<?, ?, ?> value : values.values())
             {
-                value.parseDefault();
+                value.reset();
             }
             for (final Node value : children.values())
             {
-                value.parseDefaults();
+                value.reset();
             }
         }
     }

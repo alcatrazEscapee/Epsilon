@@ -50,14 +50,14 @@ public record ValueConverter<T, U, V extends Value<U>>(Type<T> type, Function<T,
         }, Enum::name, TypeValue::new);
     }
 
-    void parseInto(Object object, V value)
+    void parseInto(Object object, V value) throws ParseError
     {
         value.set(parseFunction.apply(type.parse(object)));
     }
 
-    T write(V value)
+    String write(V value)
     {
-        return writeFunction.apply(value.get());
+        return type.write(writeFunction.apply(value.get()));
     }
 
     V create(U defaultValue)

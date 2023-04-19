@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 record TypedValue<T, U, V extends Value<U>>(String name, String longName, @Nullable String[] comment, V value, U defaultValue, ValueConverter<T, U, V> converter)
 {
-    T write()
+    String write()
     {
         return converter.write(value);
     }
@@ -18,7 +18,7 @@ record TypedValue<T, U, V extends Value<U>>(String name, String longName, @Nulla
         catch (ParseError e) { error.accept("Reading " + longName + ": " + e.getMessage()); }
     }
 
-    void parseDefault()
+    void reset()
     {
         value.set(defaultValue);
     }

@@ -85,7 +85,7 @@ public class IntegrationTests
         assertThat(valueInOtherNestedCategory.getAsInt()).isEqualTo(20);
 
         // Parse back to default values
-        spec.parseDefaults();
+        spec.reset();
 
         assertThat(boolValue.getAsBoolean()).isFalse();
         assertThat(intValue.getAsInt()).isEqualTo(0);

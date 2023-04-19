@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,19 +18,6 @@ public final class TomlUtil
         parser.parse();
 
         return new TomlParseResult(parser.values, scanner.error || parser.error);
-    }
-
-    public static <T> String writeValue(T value)
-    {
-        if (value instanceof List<?> list)
-        {
-            return "[%s]".formatted(list.stream().map(TomlUtil::writeValue).collect(Collectors.joining(", ")));
-        }
-        if (value instanceof String string)
-        {
-            return "\"%s\"".formatted(StringEscapeUtils.escapeJava(string));
-        }
-        return String.valueOf(value);
     }
 
     public record TomlParseResult(Map<String, Object> map, boolean errors) {}
