@@ -53,7 +53,7 @@ jobs:
             ```groovy
             repositories {
                 maven {
-                    url = "https://alcatrazescapee.jfrog.io/artifactory/mods"
+                    url = "https://alcatrazescapee.com/maven"
                 }
             }
             
@@ -63,9 +63,10 @@ jobs:
             ```
           draft: true
           prerelease: false
-      - name: Publish to Artifactory
-        run: ./gradlew artifactoryPublish
+      - name: Publish
+        run: ./gradlew publish
         env:
           VERSION: ${{ steps.get_version.outputs.result }}
-          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          MAVEN_URL: ${{ secrets.MAVEN_URL }}
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}

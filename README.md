@@ -15,12 +15,12 @@ Include this project via gradle:
 ```groovy
 repositories {
     maven {
-        url = 'https://alcatrazescapee.jfrog.io/artifactory/mods'
+        url = "https://alcatrazescapee.com/maven"
     }
 }
 
 dependencies {
-    implementation 'com.alcatrazescapee:epsilon:0.4'
+    implementation "com.alcatrazescapee:epsilon:0.6"
 }
 ```
 

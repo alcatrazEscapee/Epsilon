@@ -1,7 +1,6 @@
 plugins {
     java
     id("maven-publish")
-    id("com.jfrog.artifactory") version "4.25.4"
 }
 
 group = "com.alcatrazescapee"
@@ -17,9 +16,9 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.jetbrains:annotations:23.0.0")
 
-    testImplementation("org.assertj:assertj-core:3.23.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+    testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 
 java {
@@ -40,23 +39,12 @@ publishing {
         }
     }
     repositories {
-        mavenLocal()
-    }
-}
-
-
-artifactory {
-    setContextUrl("https://alcatrazescapee.jfrog.io/artifactory")
-    publish {
-        repository {
-            setRepoKey("mods")
-            setUsername(System.getenv("ARTIFACTORY_USERNAME"))
-            setPassword(System.getenv("ARTIFACTORY_PASSWORD"))
-        }
-        defaults {
-            publications("mavenJava")
-            setPublishArtifacts(true)
-            setPublishPom(true)
+        maven {
+            url = uri(System.getenv("MAVEN_URL"))
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
         }
     }
 }
