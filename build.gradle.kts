@@ -40,10 +40,10 @@ publishing {
     }
     repositories {
         maven {
-            url = uri(System.getenv("MAVEN_URL"))
+            url = uri(System.getenv("MAVEN_URL") ?: "")
             credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
+                username = System.getenv("MAVEN_USERNAME") ?: "<username>"
+                password = System.getenv("MAVEN_PASSWORD") ?: "<password>"
             }
         }
     }
